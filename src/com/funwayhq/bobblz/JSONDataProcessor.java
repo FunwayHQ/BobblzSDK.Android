@@ -1,4 +1,4 @@
-package com.developer.bobblz;
+package com.funwayhq.bobblz;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -6,19 +6,18 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONDataProcessor<T> implements IDataProcessor<T> {
+public class JSONDataProcessor implements IDataProcessor {
 
     @Override
     public String getMIMEType() {
-        // TODO implementation
-        return null;
+    	return "application/json";
     }
 
     @Override
-    public T decode(String data, Class<T> classInstace) throws JSONException, 
+    public Object decode(String data, Class<?> classInstace) throws JSONException, 
     							InstantiationException, IllegalAccessException, 
     							NoSuchFieldException, SecurityException {
-    	T scope = classInstace.newInstance();
+    	Object scope = classInstace.newInstance();
         JSONObject object = new JSONObject(data);
 
         Iterator<String> fieldsKeys = object.keys();
@@ -35,8 +34,8 @@ public class JSONDataProcessor<T> implements IDataProcessor<T> {
     }
 
     @Override
-    public String encode(T scope) throws IllegalAccessException, JSONException {
-        Class<? extends Object> tClass = scope.getClass();
+    public String encode(Object scope) throws IllegalAccessException, JSONException {
+        Class<?> tClass = scope.getClass();
 
         Field[] fields = tClass.getDeclaredFields();
 

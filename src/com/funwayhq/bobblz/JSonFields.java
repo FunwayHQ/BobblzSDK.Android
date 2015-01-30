@@ -1,4 +1,4 @@
-package com.developer.bobblz;
+package com.funwayhq.bobblz;
 
 import java.util.NoSuchElementException;
 

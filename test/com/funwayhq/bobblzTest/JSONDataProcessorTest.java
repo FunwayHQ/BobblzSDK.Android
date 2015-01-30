@@ -1,4 +1,4 @@
-package com.developer.bobblzTest;
+package com.funwayhq.bobblzTest;
 
 
 import static org.junit.Assert.assertEquals;
@@ -10,15 +10,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import com.developer.bobblz.JSONDataProcessor;
-import com.developer.bobblz.JSonFields;
-import com.developer.bobblz.TestClass;
+import com.funwayhq.bobblz.JSONDataProcessor;
+import com.funwayhq.bobblz.JSonFields;
+import com.funwayhq.bobblz.TestClass;
 
 public class JSONDataProcessorTest {
 
     @Test
     public void fetchJsonFieldNameFromEnumTest() throws NoSuchFieldException {
-        JSONDataProcessor<TestClass> dataProcessor = new JSONDataProcessor<>();
+        JSONDataProcessor dataProcessor = new JSONDataProcessor();
 
         String fieldName = "prop1";
         String expectedJsonFieldName = "prop1_json";
@@ -47,7 +47,7 @@ public class JSONDataProcessorTest {
     	JSONObject expectedJson = formJson();
     	
     	TestClass tClass = new TestClass();
-    	JSONDataProcessor<TestClass> dataProcessor = new JSONDataProcessor<>();
+    	JSONDataProcessor dataProcessor = new JSONDataProcessor();
     	String realJsonString = dataProcessor.encode(tClass);
     	
     	assertEquals(expectedJson.toString(), realJsonString);
@@ -66,8 +66,8 @@ public class JSONDataProcessorTest {
     	JSONObject json = formJson();
     	
     	TestClass expectedTestClass = new TestClass();
-    	JSONDataProcessor<TestClass> dataProcessor = new JSONDataProcessor<>();
-    	TestClass realTestClass = dataProcessor.decode(json.toString(), TestClass.class);
+    	JSONDataProcessor dataProcessor = new JSONDataProcessor();
+    	TestClass realTestClass = (TestClass) dataProcessor.decode(json.toString(), TestClass.class);
     	
     	Field[] expectedFields = expectedTestClass.getClass().getDeclaredFields();
         for (Field field: expectedFields) {
