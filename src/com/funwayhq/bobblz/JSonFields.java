@@ -4,7 +4,8 @@ import java.util.NoSuchElementException;
 
 public enum JSonFields {
 
-    prop1("prop1_json");
+    name("name"),
+    age("age");
 
     private final String jsonName;
 

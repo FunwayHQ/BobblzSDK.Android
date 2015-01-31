@@ -9,10 +9,10 @@ import org.json.JSONObject;
 
 public class JSONParserHelper {
 	
-	public static Object parseOne(String jString, Class<?> classObject) {
+	public static IResource parseOne(String jString, Class<?> classObject) {
 		JSONDataProcessor dataProcessor = new JSONDataProcessor();
 		try {
-			Object object = dataProcessor.decode(jString, classObject);
+			IResource object = dataProcessor.decode(jString, classObject);
 			return object;
 		} catch (JSONException | InstantiationException
 				| IllegalAccessException | NoSuchFieldException
@@ -23,14 +23,14 @@ public class JSONParserHelper {
 		}
 	}
 	
-	public static List<Object> parseAll(String jString, Class<?> classObject) {
+	public static List<IResource> parseAll(String jString, Class<?> classObject) {
 		try {
 			JSONArray jsonArray = new JSONArray(jString);
-			List<Object> dataList = new ArrayList<>();
+			List<IResource> dataList = new ArrayList<>();
 			
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject object = jsonArray.getJSONObject(i);
-				Object oneItem = parseOne(object.toString(), classObject);
+				IResource oneItem = parseOne(object.toString(), classObject);
 				
 				if (oneItem != null) {
 					dataList.add(parseOne(object.toString(), classObject));
@@ -46,7 +46,7 @@ public class JSONParserHelper {
 		}
 	}
 	
-	public static String encodeOne(Object object) {
+	public static String encodeOne(IResource object) {
 		JSONDataProcessor dataProcessor = new JSONDataProcessor();
 		try {
 			return dataProcessor.encode(object);

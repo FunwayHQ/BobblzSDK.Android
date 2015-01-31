@@ -4,70 +4,46 @@ package com.funwayhq.bobblzTest;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
-import java.util.NoSuchElementException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
 import com.funwayhq.bobblz.JSONDataProcessor;
-import com.funwayhq.bobblz.JSonFields;
-import com.funwayhq.bobblz.TestClass;
+import com.funwayhq.bobblz.User;
 
 public class JSONDataProcessorTest {
-
-    @Test
-    public void fetchJsonFieldNameFromEnumTest() throws NoSuchFieldException {
-        JSONDataProcessor dataProcessor = new JSONDataProcessor();
-
-        String fieldName = "prop1";
-        String expectedJsonFieldName = "prop1_json";
-        TestClass testClass = new TestClass();
-        Field field = testClass.getClass().getDeclaredField(fieldName);
-        String realJsonFieldName = dataProcessor.fetchJsonFieldNameFromEnum(field);
-        
-        assertEquals(expectedJsonFieldName, realJsonFieldName);
-    }
-    
-    @Test
-    public void getNameByValueTest() {
-    	String expectedVariableName = "prop1";
-    	String realVariableName = JSonFields.getNameByValue("prop1_json");
-    	
-    	assertEquals(expectedVariableName, realVariableName);
-    }
-    
-    @Test (expected = NoSuchElementException.class)
-    public void getUnexistingNameByValueTest() {
-    	JSonFields.getNameByValue("prop_json");
-    }
     
     @Test
     public void encodeTest() throws IllegalAccessException, JSONException {
-    	JSONObject expectedJson = formJson();
+    	JSONObject expectedJson = new JSONObject();
+    	expectedJson.put("name", "nameValue");
+    	expectedJson.put("age", "5");
     	
-    	TestClass tClass = new TestClass();
+    	User tClass = new User();
+    	tClass.name = "nameValue";
+    	tClass.age = "5";
+    	
     	JSONDataProcessor dataProcessor = new JSONDataProcessor();
     	String realJsonString = dataProcessor.encode(tClass);
     	
     	assertEquals(expectedJson.toString(), realJsonString);
     }
-
-	private JSONObject formJson() {
-		JSONObject expectedJson = new JSONObject();
-    	expectedJson.put("prop1_json", "value1");
-		return expectedJson;
-	}
     
     @Test
     public void decodeTest() throws JSONException, InstantiationException, 
     					IllegalAccessException, NoSuchFieldException, 
     					SecurityException {
-    	JSONObject json = formJson();
+    	JSONObject json = new JSONObject();
+    	json.put("name", "nameValue");
+    	json.put("age", "5");
     	
-    	TestClass expectedTestClass = new TestClass();
+    	User expectedTestClass = new User();
+    	expectedTestClass.name = "nameValue";
+    	expectedTestClass.age = "5";
+    	
     	JSONDataProcessor dataProcessor = new JSONDataProcessor();
-    	TestClass realTestClass = (TestClass) dataProcessor.decode(json.toString(), TestClass.class);
+    	User realTestClass = (User) dataProcessor.decode(json.toString(), User.class);
     	
     	Field[] expectedFields = expectedTestClass.getClass().getDeclaredFields();
         for (Field field: expectedFields) {

@@ -14,10 +14,10 @@ public class JSONDataProcessor implements IDataProcessor {
     }
 
     @Override
-    public Object decode(String data, Class<?> classInstace) throws JSONException, 
+    public IResource decode(String data, Class<?> classInstace) throws JSONException, 
     							InstantiationException, IllegalAccessException, 
     							NoSuchFieldException, SecurityException {
-    	Object scope = classInstace.newInstance();
+    	IResource scope = (IResource) classInstace.newInstance();
         JSONObject object = new JSONObject(data);
 
         Iterator<String> fieldsKeys = object.keys();
@@ -34,7 +34,7 @@ public class JSONDataProcessor implements IDataProcessor {
     }
 
     @Override
-    public String encode(Object scope) throws IllegalAccessException, JSONException {
+    public String encode(IResource scope) throws IllegalAccessException, JSONException {
         Class<?> tClass = scope.getClass();
 
         Field[] fields = tClass.getDeclaredFields();
@@ -55,5 +55,4 @@ public class JSONDataProcessor implements IDataProcessor {
         JSonFields jsonField = JSonFields.valueOf(varName);
         return jsonField.getJsonName();
     }
-
 }

@@ -10,9 +10,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class HTTPTransportHelper {
 	
@@ -67,7 +64,7 @@ public class HTTPTransportHelper {
 		}
 	}
 	
-	public static void setPostEntity(HttpPost httpPost, Object object) {
+	public static void setPostEntity(HttpPost httpPost, IResource object) {
 		String jString = JSONParserHelper.encodeOne(object);
 		StringEntity entity = new StringEntity(jString, "UTF-8");
 		httpPost.setEntity(entity);

@@ -1,26 +1,12 @@
 package com.funwayhq.bobblz;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class HTTPTransportProvider implements ITransportProvider {
 	
@@ -28,7 +14,11 @@ public class HTTPTransportProvider implements ITransportProvider {
 	private HttpPost httpPost;
 	private HttpClient httpClient;
 	private HttpResponse response;
-
+	private Class<?> classObject;
+	
+	public HTTPTransportProvider(Class<?> classObject) {
+		this.classObject = classObject;
+	}
 	
 	@Override
 	public boolean connect() {
@@ -49,15 +39,7 @@ public class HTTPTransportProvider implements ITransportProvider {
 	
 	@Override
 	public String getOne(BZCriteria criteria) {
-		httpClient = HttpClientBuilder.create().build();
-        httpGet = new HttpGet();
-        
-        if (HTTPTransportHelper.setUrl(httpGet, Urls.ONE_ITEM_URL.toString()) && connect()) {
-        	StringBuffer stringBuffer = HTTPTransportHelper.getStringBuffer(response);
-        	return stringBuffer.toString();
-        }
-        
-		return null;
+		return makeGetRequest(Urls.getOneItemUrl(classObject));
 	}
 
 	@Override
@@ -67,15 +49,7 @@ public class HTTPTransportProvider implements ITransportProvider {
 
 	@Override
 	public String getAll(BZCriteria criteria) {
-		httpClient = HttpClientBuilder.create().build();
-        httpGet = new HttpGet();
-        
-        if (HTTPTransportHelper.setUrl(httpGet, Urls.LIST_URL.toString()) && connect()) {
-        	StringBuffer stringBuffer = HTTPTransportHelper.getStringBuffer(response);
-        	return stringBuffer.toString();
-        }
-        
-		return null;
+		return makeGetRequest(Urls.getListUrl(classObject));
 	}
 
 	@Override
@@ -84,22 +58,25 @@ public class HTTPTransportProvider implements ITransportProvider {
 	}
 
 	@Override
-	public boolean create(Object object) {
-		return makePostRequest(object, Urls.CREATE_URL.toString());
+	public boolean create(IResource object) {
+		return makePostRequest(object, Urls.getCreateUrl(object));
 	}
 
 	@Override
-	public boolean save(Object object) {
-		return makePostRequest(object, Urls.SAVE_URL.toString());
+	public boolean save(IResource object) {
+		return makePostRequest(object, Urls.getSaveUrl(object));
 	}
 
 	@Override
-	public boolean remove(Object object) {
-		return makePostRequest(object, Urls.REMOVE_URL.toString());
+	public boolean remove(IResource object) {
+		return makePostRequest(object, Urls.getRemoveUrl(object));
 	}
 
 	@Override
 	public boolean close() {
+		httpClient = null;
+		httpPost = null;
+		httpGet = null;
 		return true;
 	}
 
@@ -109,7 +86,7 @@ public class HTTPTransportProvider implements ITransportProvider {
 		return false;
 	}
 	
-	private boolean makePostRequest(Object object, String url) {
+	private boolean makePostRequest(IResource object, String url) {
 		httpClient = HttpClientBuilder.create().build();
         httpPost = new HttpPost();
         HTTPTransportHelper.setPostEntity(httpPost, object);
@@ -119,9 +96,25 @@ public class HTTPTransportProvider implements ITransportProvider {
         	int status = JSONParserHelper.getResponseCode(stringBuffer.toString());
         	
         	// TODO check if the status corresponds to the action was done succefully
+        	close();
         	return true;
         }
 		
+        close();
 		return false;
 	}
-}
+	
+	private String makeGetRequest(String url) {
+		httpClient = HttpClientBuilder.create().build();
+        httpGet = new HttpGet();
+        
+        if (HTTPTransportHelper.setUrl(httpGet, url) && connect()) {
+        	StringBuffer stringBuffer = HTTPTransportHelper.getStringBuffer(response);
+        	close();
+        	return stringBuffer.toString();
+        }
+        
+        close();
+		return null;
+	}
+} 
