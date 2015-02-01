@@ -93,7 +93,7 @@ public class HTTPTransportProvider implements ITransportProvider {
         
         if (HTTPTransportHelper.setUrl(httpPost, url) && connect()) {
         	StringBuffer stringBuffer = HTTPTransportHelper.getStringBuffer(response);
-        	int status = JSONParserHelper.getResponseCode(stringBuffer.toString());
+        	int status = HTTPTransportHelper.getResponseCode(stringBuffer.toString());
         	
         	// TODO check if the status corresponds to the action was done succefully
         	close();

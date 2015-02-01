@@ -4,15 +4,27 @@ package com.funwayhq.bobblz;
 public class User implements IResource {
 
     public String name;
-    public String age;
+    public int age;
+    public int id;
     
     public User() {
     	name = "";
-    	age = "";
+    	age = 0;
+    	id = 0;
     }
 
 	@Override
 	public ITransportProvider getTransport() {
 		return TransportManager.getTransportProvider(TransportProviders.HTTP, getClass());
+	}
+	
+	@Override
+	public IDataProcessor getDataProcessor() {
+		return DataProcessorManager.getDataProcessor(DataProcessors.JSON);
+	}
+
+	@Override
+	public int getId() {
+		return id;
 	}
 }

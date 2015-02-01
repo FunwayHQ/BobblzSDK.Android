@@ -20,7 +20,7 @@ public enum JSonFields {
     public static String getNameByValue(String value) {
         JSonFields[] fields = values();
 
-        String name = "";
+        String name = null;
         for (JSonFields field: fields) {
             if (field.getJsonName().equalsIgnoreCase(value)) {
                 name = field.name();
@@ -28,10 +28,6 @@ public enum JSonFields {
             }
         }
         
-        if (name.equalsIgnoreCase("")) {
-        	throw new NoSuchElementException();
-        } else {
-        	return name;
-        }
+        return name;
     }
 }

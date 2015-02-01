@@ -25,11 +25,13 @@ public class Urls {
 	
 	public static String getSaveUrl(IResource scope) {
 		Class<?> classObject = scope.getClass();
-		return BASE_URL + classObject.getName().toLowerCase() + SAVE_URL_ENDING;
+		return BASE_URL + classObject.getName().toLowerCase() + SAVE_URL_ENDING
+				+ "/" + scope.getId();
 	}
 	
 	public static String getRemoveUrl(IResource scope) {
 		Class<?> classObject = scope.getClass();
-		return BASE_URL + classObject.getName().toLowerCase() + REMOVE_URL_ENDING;
+		return BASE_URL + classObject.getName().toLowerCase() + REMOVE_URL_ENDING 
+				+ "/" + scope.getId();
 	}
 }

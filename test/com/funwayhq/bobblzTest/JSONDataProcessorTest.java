@@ -18,11 +18,11 @@ public class JSONDataProcessorTest {
     public void encodeTest() throws IllegalAccessException, JSONException {
     	JSONObject expectedJson = new JSONObject();
     	expectedJson.put("name", "nameValue");
-    	expectedJson.put("age", "5");
+    	expectedJson.put("age", 5);
     	
     	User tClass = new User();
     	tClass.name = "nameValue";
-    	tClass.age = "5";
+    	tClass.age = 5;
     	
     	JSONDataProcessor dataProcessor = new JSONDataProcessor();
     	String realJsonString = dataProcessor.encode(tClass);
@@ -36,19 +36,19 @@ public class JSONDataProcessorTest {
     					SecurityException {
     	JSONObject json = new JSONObject();
     	json.put("name", "nameValue");
-    	json.put("age", "5");
+    	json.put("age", 5);
     	
     	User expectedTestClass = new User();
     	expectedTestClass.name = "nameValue";
-    	expectedTestClass.age = "5";
+    	expectedTestClass.age = 5;
     	
     	JSONDataProcessor dataProcessor = new JSONDataProcessor();
     	User realTestClass = (User) dataProcessor.decode(json.toString(), User.class);
     	
     	Field[] expectedFields = expectedTestClass.getClass().getDeclaredFields();
         for (Field field: expectedFields) {
-        	String expectedValue = (String) field.get(expectedTestClass);
-        	String realValue = (String) field.get(realTestClass);
+        	Object expectedValue = field.get(expectedTestClass);
+        	Object realValue = field.get(realTestClass);
         	assertEquals(expectedValue, realValue);
         }
     }

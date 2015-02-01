@@ -7,11 +7,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONParserHelper {
+public class DataProcessorManager {
+	
+	public static IDataProcessor getDataProcessor(DataProcessors providerType) {
+		IDataProcessor processor = null;
+		
+		switch (providerType) {
+			case JSON:
+				processor = new JSONDataProcessor();
+				break;
+			case XML:
+				break;
+		}
+		
+		return processor;
+	}
 	
 	public static IResource parseOne(String jString, Class<?> classObject) {
-		JSONDataProcessor dataProcessor = new JSONDataProcessor();
 		try {
+			IResource scope = (IResource) classObject.newInstance();
+			IDataProcessor dataProcessor = scope.getDataProcessor();
 			IResource object = dataProcessor.decode(jString, classObject);
 			return object;
 		} catch (JSONException | InstantiationException
@@ -46,20 +61,15 @@ public class JSONParserHelper {
 		}
 	}
 	
-	public static String encodeOne(IResource object) {
-		JSONDataProcessor dataProcessor = new JSONDataProcessor();
+	public static String encodeOne(IResource scope) {
 		try {
-			return dataProcessor.encode(object);
+			IDataProcessor dataProcessor = scope.getDataProcessor();
+			return dataProcessor.encode(scope);
 		} catch (JSONException | IllegalAccessException
 				| SecurityException e) {
 	
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	public static int getResponseCode(String jString) {
-		JSONObject object = new JSONObject(jString);
-		return object.getInt("status");
 	}
 }

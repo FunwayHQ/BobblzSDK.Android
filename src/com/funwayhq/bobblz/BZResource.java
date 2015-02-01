@@ -1,5 +1,6 @@
 package com.funwayhq.bobblz;
 
+import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +15,10 @@ public class BZResource {
 	public static List<BZResource> findAll(BZCriteria criteria, Class<?> classObject) 
 			throws InstantiationException, IllegalAccessException {
 		IResource scope = (IResource) classObject.newInstance();
-		
 		ITransportProvider transportProvider = scope.getTransport();
 		String response = transportProvider.getAll();
-		List<IResource> objects = JSONParserHelper.parseAll(response, classObject);
+		
+		List<IResource> objects = DataProcessorManager.parseAll(response, classObject);
 		List<BZResource> resources = new ArrayList<BZResource>();
 		
 		for (IResource object: objects) {
@@ -38,7 +39,7 @@ public class BZResource {
 		IResource scope = (IResource) classObject.newInstance();
 		ITransportProvider transportProvider = scope.getTransport();
 		String response = transportProvider.getOne();
-		IResource object = JSONParserHelper.parseOne(response, classObject);
+		IResource object = DataProcessorManager.parseOne(response, classObject);
 		BZResource resource = new BZResource(object);
 		
 		return resource;
