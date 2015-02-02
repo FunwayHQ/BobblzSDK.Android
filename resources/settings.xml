@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<settings>
+	<base_url>http://api.mycab24.ru/</base_url>
+	<list_url_ending>/list</list_url_ending>
+	<create_url_ending>/create</create_url_ending>
+	<save_url_ending>/save</save_url_ending>
+	<remove_url_ending>/remove</remove_url_ending>
+</settings>
